@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import AFNetworking
 
 class ViewController: UIViewController,CLLocationManagerDelegate {
 
@@ -31,6 +32,7 @@ class ViewController: UIViewController,CLLocationManagerDelegate {
             locationManager.startUpdatingLocation()
             print("定位开始")
         }
+        
     }
     
     func ios8() -> Bool{
@@ -48,9 +50,18 @@ class ViewController: UIViewController,CLLocationManagerDelegate {
         if location.horizontalAccuracy > 0{
             print(location.coordinate.latitude)
             print(location.coordinate.longitude)
-            
+            self.updateWeatherInfo(location.coordinate.latitude,longitude:location.coordinate.longitude)
             locationManager.stopUpdatingLocation()
         }
+    }
+    
+    func updateWeatherInfo(latitude:CLLocationDegrees,longitude:CLLocationDegrees){
+        let manager = AFHTTPRequestOperationManager()
+        let url = "http://api.openweathermap.org/data/2.5/weather"
+        let appid = "8c1934967b2ff01415f0cb6f2d878176"
+        let params = ["lat": latitude,"lon": longitude, "appid":appid]
+        manager.GET(url, parameters: params, success: {(operation:AFHTTPRequestOperation!,responseObject:AnyObject!) in print("JSON: "+responseObject.description!)}, failure: {(operation:AFHTTPRequestOperation?,error:NSError) in print("Error: "+error.localizedDescription)})
+        
     }
     
     func locationManager(manager: CLLocationManager, didFailWithError error: NSError) {
