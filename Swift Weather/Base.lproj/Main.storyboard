@@ -34,6 +34,11 @@
                         </subviews>
                         <color key="backgroundColor" red="0.33649840369751816" green="0.80774600203655311" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
+                    <connections>
+                        <outlet property="icon" destination="6vE-mV-Gq4" id="lFx-cm-DLy"/>
+                        <outlet property="location" destination="AqG-sH-WbC" id="rkS-hn-dqz"/>
+                        <outlet property="temperature" destination="cIE-zo-Ies" id="vq4-JB-dfj"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

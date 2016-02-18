@@ -14,6 +14,10 @@ class ViewController: UIViewController,CLLocationManagerDelegate {
 
     let locationManager:CLLocationManager = CLLocationManager()
     
+    @IBOutlet weak var location: UILabel!
+    @IBOutlet weak var icon: UIImageView!
+    @IBOutlet weak var temperature: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -60,7 +64,48 @@ class ViewController: UIViewController,CLLocationManagerDelegate {
         let url = "http://api.openweathermap.org/data/2.5/weather"
         let appid = "8c1934967b2ff01415f0cb6f2d878176"
         let params = ["lat": latitude,"lon": longitude, "appid":appid]
-        manager.GET(url, parameters: params, success: {(operation:AFHTTPRequestOperation!,responseObject:AnyObject!) in print("JSON: "+responseObject.description!)}, failure: {(operation:AFHTTPRequestOperation?,error:NSError) in print("Error: "+error.localizedDescription)})
+        manager.GET(url, parameters: params, success: {(operation:AFHTTPRequestOperation!,responseObject:AnyObject!) in print("JSON: "+responseObject.description!)
+                self.updateUISuccess(responseObject as! NSDictionary)
+            },
+            failure: {(operation:AFHTTPRequestOperation?,error:NSError) in print("Error: "+error.localizedDescription)})
+        
+    }
+    
+    func updateUISuccess(jsonResult:NSDictionary){
+        if let tempResult = jsonResult["main"]?["temp"] as? Double{
+            var temperature:Double = 0
+            if jsonResult["sys"]?["country"] as! String == "US" {
+                temperature = round(((tempResult-273.15)*1.8)+32)
+            }
+            else{
+                temperature = round(tempResult-273.15)
+            }
+            
+            self.temperature.text = "\(temperature)°"
+            self.temperature.font = UIFont.boldSystemFontOfSize(60)
+            
+//            let name = jsonResult["name"] as! String
+            let name = jsonResult["sys"]!["country"] as! String
+            self.location.font = UIFont.boldSystemFontOfSize(25)
+            self.location.text = "\(name)"
+            
+            let condition = (jsonResult["weather"] as! NSArray)[0]["id"] as! Int
+            let sunrise = jsonResult["sys"]!["sunrise"] as! Double
+            let sunset = jsonResult["sys"]!["sunset"] as! Double
+            
+            var nightTime = false
+            let now = NSDate().timeIntervalSince1970
+            if now < sunrise || now > sunset {
+                nightTime = true
+            }
+            self.updateWeatherIcon(condition,nightTime:nightTime)
+        }
+        else{
+            
+        }
+    }
+    
+    func updateWeatherIcon(condition:Int, nightTime:Bool){
         
     }
     
