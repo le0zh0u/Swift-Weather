@@ -50,6 +50,7 @@ class ViewController: UIViewController,CLLocationManagerDelegate {
     }
 
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
         let location:CLLocation=locations.last!
         if location.horizontalAccuracy > 0{
             print(location.coordinate.latitude)
@@ -60,6 +61,7 @@ class ViewController: UIViewController,CLLocationManagerDelegate {
     }
     
     func updateWeatherInfo(latitude:CLLocationDegrees,longitude:CLLocationDegrees){
+        
         let manager = AFHTTPRequestOperationManager()
         let url = "http://api.openweathermap.org/data/2.5/weather"
         let appid = "8c1934967b2ff01415f0cb6f2d878176"
